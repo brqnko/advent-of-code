@@ -67,20 +67,36 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    // println!("{:?}", operators);
-
     // calc answers for each line
-    let answers = operators.into_iter().map(|(op, start, end)| {
-        let strs = r[0..r.len() - 1].iter().map(|line| &line[start..end - 1]).collect::<Vec<_>>();
-        (
-            op,
-            (0..strs[0].len()).map(|i| strs.iter().map(move |s| &s[i..i + 1]).filter(|c| c != &" ").collect::<String>().parse::<i128>().unwrap()).collect::<Vec<_>>(),
-        )
-    }).map(|(op, numbers)| match op {
-        "*" => numbers.iter().fold(1, |current, item| current * item),
-        "+" => numbers.iter().sum::<i128>(),
-        _ => panic!("unknown operator"),
-    }).collect::<Vec<_>>();
+    let answers = operators
+        .into_iter()
+        .map(|(op, start, end)| {
+            let strs = r[0..r.len() - 1]
+                .iter()
+                .map(|line| &line[start..end - 1])
+                .collect::<Vec<_>>();
+            (
+                op,
+                (0..strs[0].len())
+                    .map(|i| {
+                        strs.iter()
+                            .map(move |s| &s[i..i + 1])
+                            .filter(|c| c != &" ")
+                            .collect::<String>()
+                            .parse::<i128>()
+                            .unwrap()
+                    })
+                    .collect::<Vec<_>>(),
+            )
+        })
+        .map(|(op, numbers)| match op {
+            "*" => numbers.iter().fold(1, |current, item| current * item),
+            "+" => numbers.iter().sum::<i128>(),
+            _ => panic!("unknown operator"),
+        })
+        .collect::<Vec<_>>();
+
     println!("{}", answers.iter().sum::<i128>());
+
     Ok(())
 }
